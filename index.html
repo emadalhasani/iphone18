@@ -766,5 +766,19 @@
             }
         });
     </script>
+
+    <script>
+        // يرسل ارتفاع الصفحة الحقيقي لأي إطار (iframe) يعرض هذه الصفحة، مثل صفحة سلة
+        function sendHeightToParent() {
+            var height = document.documentElement.scrollHeight;
+            window.parent.postMessage({ type: 'ihtemamFrameHeight', height: height }, '*');
+        }
+        window.addEventListener('load', sendHeightToParent);
+        window.addEventListener('resize', sendHeightToParent);
+
+        // يرصد أي تغيّر في المحتوى (مثل فتح/إغلاق قسم الأقساط) ويعيد إرسال الارتفاع فورًا
+        var ihtemamResizeObserver = new MutationObserver(sendHeightToParent);
+        ihtemamResizeObserver.observe(document.body, { childList: true, subtree: true, attributes: true });
+    </script>
 </body>
 </html>
